@@ -9,7 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import pro.gural.common.domain.AddressCategoryType;
+import pro.gural.common.domain.CompanyStatusType;
+import pro.gural.company.company.CompanyClient;
 import pro.gural.company.component_test.BaseComponentTestWebWithPostgres;
+import pro.gural.company.domain.Company;
+import pro.gural.company.domain.CompanyAddress;
+
+import java.nio.charset.CoderResult;
+import java.util.List;
 
 /**
  * @author Vladyslav Gural
@@ -38,6 +46,27 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
 
     @Test
     void test() throws Exception {
-        logger.info("Component test");
+
+        // create Alis company
+        CompanyAddress companyAddress01 = new CompanyAddress()
+                .setCountry("Ukraine")
+                .setCity("Kyiv")
+                .setStreet("Vasilya Tutunnika")
+                .setZip("03150")
+                .setAddressCategory(List.of(AddressCategoryType.HEADQUARTER, AddressCategoryType.DISTRIBUTION_CENTER));
+
+        CompanyAddress companyAddress02 = new CompanyAddress()
+                .setCountry("Ukraine")
+                .setCity("Lviv")
+                .setStreet("Velika Gora")
+                .setZip("02011")
+                .setAddressCategory(List.of(AddressCategoryType.HEADQUARTER));
+
+        Company company = CompanyClient.createCompany(this, "Alis", CompanyStatusType.ACTIVE,
+                "phone: +380503332211, mail: info@alis.pro", "food",
+                List.of(companyAddress01, companyAddress02));
+
+
+        logger.info("Component test finished");
     }
 }

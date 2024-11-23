@@ -1,18 +1,16 @@
-package pro.gural.company.domain;
+/**
+ * @author Vladyslav Gural
+ * @version 2024-11-23
+ */
+package pro.gural.company.address;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import pro.gural.common.domain.AddressCategoryType;
 
-import java.util.List;
 import java.util.Objects;
 
-/**
- * @author Vladyslav Gural
- * @version 2024-11-23
- */
 @Entity
 @Table(name = "company_address")
 class AddressEntity {

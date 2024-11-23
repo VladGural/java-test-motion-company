@@ -18,6 +18,7 @@
     <properties>
         <java.version>21</java.version>
 
+        <openapi.version>2.4.0</openapi.version>
         <common.version>0.0.1-SNAPSHOT</common.version>
         <exception.version>0.0.1-SNAPSHOT</exception.version>
     </properties>
@@ -62,6 +63,13 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <!-- swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi.version}</version>
         </dependency>
 
         <!-- test -->

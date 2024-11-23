@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-public class BaseComponentTestWebWithPostgres {
+public class BaseComponentTestWebWithPostgres extends BaseComponentTest {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseComponentTestWebWithPostgres.class);
 
