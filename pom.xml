@@ -17,6 +17,9 @@
 
     <properties>
         <java.version>21</java.version>
+
+        <common.version>0.0.1-SNAPSHOT</common.version>
+        <exception.version>0.0.1-SNAPSHOT</exception.version>
     </properties>
 
     <dependencies>
@@ -35,6 +38,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Lib -->
+        <dependency>
+            <groupId>pro.gural</groupId>
+            <artifactId>common</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>pro.gural</groupId>
+            <artifactId>exception</artifactId>
+            <version>${exception.version}</version>
         </dependency>
 
         <!-- DB -->

@@ -1,11 +1,7 @@
-CREATE TYPE company_status AS ENUM (
-    'ACTIVE', 'INACTIVE', 'BLOCKED'
-);
-
 CREATE TABLE company (
     id                      varchar(36)     NOT NULL,
     name                    text            NOT NULL,
-    status                  company_status  NOT NULL,
+    status                  text            NOT NULL,
     contact_information     text,
     industry                text,
     PRIMARY KEY (id)
