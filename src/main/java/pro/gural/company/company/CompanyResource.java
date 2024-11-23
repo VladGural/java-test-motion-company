@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pro.gural.common.domain.KafkaActionType;
 import pro.gural.company.domain.Company;
+import pro.gural.company.domain.KafkaServiceAware;
 
 /**
  * @author Vladyslav Gural
@@ -22,9 +24,12 @@ class CompanyResource {
     private static final Logger logger = LoggerFactory.getLogger(CompanyResource.class);
 
     private final CompanyService service;
+    private final KafkaServiceAware kafkaService;
 
-    CompanyResource(CompanyService service) {
+    CompanyResource(CompanyService service,
+                    KafkaServiceAware kafkaService) {
         this.service = service;
+        this.kafkaService = kafkaService;
     }
 
     @Operation(summary = "Create new company")
@@ -38,6 +43,7 @@ class CompanyResource {
         logger.info("User try to create company by request: {}", request);
         String companyId = service.createCompany(request);
         Company company = service.getById(companyId);
+        kafkaService.sendCompanyEvent(company, KafkaActionType.CREATE);
         logger.info("Company was successfully created: {}", company);
         return company;
     }

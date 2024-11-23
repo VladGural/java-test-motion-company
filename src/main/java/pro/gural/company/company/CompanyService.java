@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pro.gural.company.domain.AddressServiceAware;
 import pro.gural.company.domain.Company;
 import pro.gural.company.domain.CompanyAddress;
+import pro.gural.company.domain.KafkaServiceAware;
 import pro.gural.company.domain.exception.CompanyNotFoundRestException;
 
 import java.util.List;
@@ -23,11 +24,14 @@ class CompanyService {
 
     private final CompanyRepository repo;
     private final AddressServiceAware addressService;
+    private final KafkaServiceAware kafkaService;
 
     CompanyService(CompanyRepository repo,
-                   AddressServiceAware addressService) {
+                   AddressServiceAware addressService,
+                   KafkaServiceAware kafkaService) {
         this.repo = repo;
         this.addressService = addressService;
+        this.kafkaService = kafkaService;
     }
 
     public String createCompany(CompanyRequest req) {

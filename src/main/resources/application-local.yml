@@ -1,0 +1,10 @@
+db:
+  host: localhost
+  port: 55432
+
+kafka:
+  servers: localhost:9092
+
+spring:
+  jpa:
+    show-sql: true
