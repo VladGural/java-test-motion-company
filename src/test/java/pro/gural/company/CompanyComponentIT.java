@@ -10,15 +10,10 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import pro.gural.common.domain.AddressCategoryType;
-import pro.gural.common.domain.CompanyKafkaMessage;
-import pro.gural.common.domain.CompanyStatusType;
-import pro.gural.common.domain.KafkaActionType;
+import pro.gural.common.domain.*;
 import pro.gural.company.company.CompanyClient;
 import pro.gural.company.component_test.BaseComponentTestWebWithPostgres;
 import pro.gural.company.consumer.KafkaTestConsumer;
-import pro.gural.company.domain.Company;
-import pro.gural.company.domain.CompanyAddress;
 
 import java.util.List;
 

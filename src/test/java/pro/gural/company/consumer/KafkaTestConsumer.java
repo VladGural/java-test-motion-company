@@ -32,7 +32,7 @@ public class KafkaTestConsumer {
     public static void receiveEmail(@Payload String message) {
         CompanyKafkaMessage companyKafkaMessage = Util.fromJson(message, CompanyKafkaMessage.class);
         logger.info("Receive kafka message: {}", companyKafkaMessage);
-        companyEventMessageMap.put(new MapKey(companyKafkaMessage.getId(), companyKafkaMessage.getAction()),
+        companyEventMessageMap.put(new MapKey(companyKafkaMessage.getCompany().getId(), companyKafkaMessage.getAction()),
                 companyKafkaMessage);
     }
 

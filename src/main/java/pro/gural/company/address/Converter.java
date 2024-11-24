@@ -1,7 +1,7 @@
 package pro.gural.company.address;
 
 import pro.gural.common.domain.AddressCategoryType;
-import pro.gural.company.domain.CompanyAddress;
+import pro.gural.common.domain.CompanyAddress;
 import pro.gural.company.util.Util;
 
 import java.util.ArrayList;

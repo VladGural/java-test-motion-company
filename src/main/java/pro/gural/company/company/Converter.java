@@ -1,7 +1,7 @@
 package pro.gural.company.company;
 
-import pro.gural.company.domain.Company;
-import pro.gural.company.domain.CompanyAddress;
+import pro.gural.common.domain.Company;
+import pro.gural.common.domain.CompanyAddress;
 
 import java.util.List;
 import java.util.UUID;

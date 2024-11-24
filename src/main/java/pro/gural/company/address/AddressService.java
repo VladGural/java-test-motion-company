@@ -3,8 +3,8 @@ package pro.gural.company.address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pro.gural.common.domain.CompanyAddress;
 import pro.gural.company.domain.AddressServiceAware;
-import pro.gural.company.domain.CompanyAddress;
 
 import java.util.List;
 

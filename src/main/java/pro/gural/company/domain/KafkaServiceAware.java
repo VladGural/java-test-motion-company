@@ -1,5 +1,6 @@
 package pro.gural.company.domain;
 
+import pro.gural.common.domain.Company;
 import pro.gural.common.domain.KafkaActionType;
 
 /**

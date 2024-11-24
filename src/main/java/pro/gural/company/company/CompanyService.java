@@ -3,9 +3,9 @@ package pro.gural.company.company;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pro.gural.common.domain.Company;
+import pro.gural.common.domain.CompanyAddress;
 import pro.gural.company.domain.AddressServiceAware;
-import pro.gural.company.domain.Company;
-import pro.gural.company.domain.CompanyAddress;
 import pro.gural.company.domain.KafkaServiceAware;
 import pro.gural.company.domain.exception.CompanyNotFoundRestException;
 

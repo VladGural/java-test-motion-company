@@ -1,10 +1,10 @@
 package pro.gural.company.company;
 
 import org.springframework.http.HttpStatus;
+import pro.gural.common.domain.Company;
+import pro.gural.common.domain.CompanyAddress;
 import pro.gural.common.domain.CompanyStatusType;
 import pro.gural.company.component_test.BaseComponentTest;
-import pro.gural.company.domain.Company;
-import pro.gural.company.domain.CompanyAddress;
 import pro.gural.company.util.Util;
 
 import java.util.List;

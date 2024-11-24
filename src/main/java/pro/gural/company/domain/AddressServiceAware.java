@@ -1,5 +1,7 @@
 package pro.gural.company.domain;
 
+import pro.gural.common.domain.CompanyAddress;
+
 import java.util.List;
 
 /**

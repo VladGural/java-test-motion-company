@@ -4,13 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import pro.gural.common.domain.Company;
 import pro.gural.common.domain.CompanyKafkaMessage;
 import pro.gural.common.domain.KafkaActionType;
-import pro.gural.company.domain.Company;
 import pro.gural.company.domain.KafkaServiceAware;
 import pro.gural.company.util.Util;
-
-import java.lang.reflect.UndeclaredThrowableException;
 
 import static pro.gural.company.kafka.Converter.toCompanyKafkaMessage;
 

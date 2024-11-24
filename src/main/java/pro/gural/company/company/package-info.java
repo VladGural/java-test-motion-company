@@ -5,8 +5,8 @@
 package pro.gural.company.company;
 
 import jakarta.persistence.*;
+import pro.gural.common.domain.CompanyAddress;
 import pro.gural.common.domain.CompanyStatusType;
-import pro.gural.company.domain.CompanyAddress;
 
 import java.util.List;
 import java.util.Objects;
