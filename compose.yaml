@@ -1,0 +1,76 @@
+version: '3'
+services:
+  kafka:
+    hostname: kafka
+    container_name: kafka
+    image: apache/kafka
+    ports:
+      - "9092:9092"
+#    expose:
+#      - "9093"
+    environment:
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+#      # Configure listeners for both docker and host communication
+#      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+#      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
+#
+#      # Settings required for KRaft mode
+#      KAFKA_NODE_ID: 1
+#      KAFKA_PROCESS_ROLES: broker,controller
+#      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+#      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
+#
+#      # Listener to use for broker-to-broker communication
+#      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+#
+#      # Required for a single node cluster
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  postgres-company:
+    hostname: postgres-company
+    container_name: postgres-company
+    image: postgres:16
+    ports:
+      - "55432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: company_db
+
+  postgres-analytic:
+    hostname: postgres-analytic
+    container_name: postgres-analytic
+    image: postgres:16
+    ports:
+      - "54432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: analytic_db
+
+#  company-service:
+#    hostname: company-service
+#    container_name: company-service
+#    image: company-service
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - kafka
+#      - postgres-company
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093
+#
+#  analytic-service:
+#    hostname: analytic-service
+#    container_name: analytic-service
+#    image: analytic-service
+#    ports:
+#      - "8081:80"
+#    depends_on:
+#      - kafka
+#      - postgres-analytic
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093

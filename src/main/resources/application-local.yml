@@ -8,3 +8,6 @@ kafka:
 spring:
   jpa:
     show-sql: true
+
+server:
+  port: ${PORT:8080}

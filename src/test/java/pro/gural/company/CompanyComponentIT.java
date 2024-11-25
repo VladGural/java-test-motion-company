@@ -23,7 +23,7 @@ import java.util.List;
  */
 @DirtiesContext
 @TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles(value = {"component-tapplication-component-test.ymlest"})
+@ActiveProfiles(value = {"component-test"})
 @SpringBootTest(
     classes = {
             CompanyApplication.class

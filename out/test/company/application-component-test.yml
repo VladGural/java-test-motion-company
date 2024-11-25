@@ -1,6 +1,0 @@
-spring:
-  jpa:
-    show-sql: true
-
-kafka:
-  servers: localhost:3333
