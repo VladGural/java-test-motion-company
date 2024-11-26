@@ -22,7 +22,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -49,26 +49,26 @@ services:
       POSTGRES_PASSWORD: secret123
       POSTGRES_DB: analytic_db
 
-#  company-service:
-#    hostname: company-service
-#    container_name: company-service
-#    image: company-service
-#    ports:
-#      - "8080:80"
-#    depends_on:
-#      - kafka
-#      - postgres-company
+  company-service:
+    hostname: company-service
+    container_name: company-service
+    image: company-service
+    ports:
+      - "8080:80"
+    depends_on:
+      - kafka
+      - postgres-company
 #    environment:
 #      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093
 #
-#  analytic-service:
-#    hostname: analytic-service
-#    container_name: analytic-service
-#    image: analytic-service
-#    ports:
-#      - "8081:80"
-#    depends_on:
-#      - kafka
-#      - postgres-analytic
+  analytic-service:
+    hostname: analytic-service
+    container_name: analytic-service
+    image: analytic-service
+    ports:
+      - "8081:80"
+    depends_on:
+      - kafka
+      - postgres-analytic
 #    environment:
 #      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093

@@ -6,7 +6,7 @@ db:
   database: company_db
 
 kafka:
-  servers: localhost:9092
+  servers: PLAINTEXT://kafka:9092
   group-id: ${spring.application.name}
 
 server:

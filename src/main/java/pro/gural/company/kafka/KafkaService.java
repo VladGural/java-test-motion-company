@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pro.gural.common.domain.Company;
 import pro.gural.common.domain.CompanyKafkaMessage;
 import pro.gural.common.domain.KafkaActionType;
+import pro.gural.common.domain.KafkaTopics;
 import pro.gural.company.domain.KafkaServiceAware;
 import pro.gural.company.util.Util;
 
@@ -23,8 +24,6 @@ import static pro.gural.company.kafka.Converter.toCompanyKafkaMessage;
 class KafkaService implements KafkaServiceAware {
     private static final Logger logger = LoggerFactory.getLogger(KafkaService.class);
 
-    private static final String COMPANY_TOPIC = "company.event.v1";
-
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     KafkaService(KafkaTemplate<String, String> kafkaTemplate) {
@@ -35,7 +34,7 @@ class KafkaService implements KafkaServiceAware {
     public void sendCompanyEvent(Company company, KafkaActionType action) {
         CompanyKafkaMessage companyKafkaMessage = toCompanyKafkaMessage(company, action);
         CompletableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send(COMPANY_TOPIC, company.getId(), Util.toJson(companyKafkaMessage));
+                kafkaTemplate.send(KafkaTopics.COMPANY_TOPIC, company.getId(), Util.toJson(companyKafkaMessage));
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 logger.info("Kafka company message: {} was sent",companyKafkaMessage);

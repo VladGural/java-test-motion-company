@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import pro.gural.common.domain.CompanyKafkaMessage;
 import pro.gural.common.domain.KafkaActionType;
+import pro.gural.common.domain.KafkaTopics;
 import pro.gural.company.util.Util;
 
 import java.util.HashMap;
@@ -24,11 +25,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class KafkaTestConsumer {
     private static final Logger logger = LoggerFactory.getLogger(KafkaTestConsumer.class);
 
-    private static final String COMPANY_TOPIC = "company.event.v1";
-
     public static Map<MapKey, CompanyKafkaMessage> companyEventMessageMap = new HashMap<>();
 
-    @KafkaListener(topics = COMPANY_TOPIC)
+    @KafkaListener(topics = KafkaTopics.COMPANY_TOPIC)
     public static void receiveEmail(@Payload String message) {
         CompanyKafkaMessage companyKafkaMessage = Util.fromJson(message, CompanyKafkaMessage.class);
         logger.info("Receive kafka message: {}", companyKafkaMessage);
