@@ -4,6 +4,7 @@ db:
 
 kafka:
   servers: localhost:9092
+  group-id: ${spring.application.name}
 
 spring:
   jpa:

@@ -48,27 +48,3 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: secret123
       POSTGRES_DB: analytic_db
-
-#  company-service:
-#    hostname: company-service
-#    container_name: company-service
-#    image: company-service
-#    ports:
-#      - "8080:80"
-#    depends_on:
-#      - kafka
-#      - postgres-company
-#    environment:
-#      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093
-#
-#  analytic-service:
-#    hostname: analytic-service
-#    container_name: analytic-service
-#    image: analytic-service
-#    ports:
-#      - "8081:80"
-#    depends_on:
-#      - kafka
-#      - postgres-analytic
-#    environment:
-#      SPRING_KAFKA_BOOTSTRAP_SERVER: kafka:9093
