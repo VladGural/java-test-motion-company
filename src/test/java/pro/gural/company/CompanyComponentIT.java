@@ -55,9 +55,14 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         logger.info("Company component test is started");
 
         //
-        // create Alis company
+        // check not exist status
+        CompanyClient.companyNotExist(this, "BAD_ID");
 
-        // create 2 company addresses
+
+        //
+        // create Alis company1
+
+        // create 2 company1 addresses
         CompanyAddress companyAddress01 = new CompanyAddress()
                 .setCountry("Ukraine")
                 .setCity("Kyiv")
@@ -72,29 +77,29 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 .setZip("02011")
                 .setAddressCategory(List.of(HEADQUARTER));
 
-        Company company = CompanyClient.createCompany(this, "Alis", ACTIVE,
+        Company company1 = CompanyClient.createCompany(this, "Alis", ACTIVE,
                 "phone: +380503332211, mail: info@alis.pro", "food",
                 List.of(companyAddress01, companyAddress02));
 
-        // check company data
-        checkCompanyData(company, "Alis", ACTIVE, "phone: +380503332211, mail: info@alis.pro",
+        // check company1 data
+        checkCompanyData(company1, "Alis", ACTIVE, "phone: +380503332211, mail: info@alis.pro",
                 "food", Map.of("Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER), "Lviv", List.of(HEADQUARTER)));
 
         // check sending Company event
         CompanyKafkaMessage companyKafkaMessage =
-                KafkaTestConsumer.waitForSendCompanyEvent(company.getId(), KafkaActionType.CREATE);
+                KafkaTestConsumer.waitForSendCompanyEvent(company1.getId(), KafkaActionType.CREATE);
 
-        // get company by id
-        company = CompanyClient.getById(this, company.getId());
+        // get company1 by id
+        company1 = CompanyClient.getById(this, company1.getId());
 
-        // check company data
-        checkCompanyData(company, "Alis", ACTIVE, "phone: +380503332211, mail: info@alis.pro",
+        // check company1 data
+        checkCompanyData(company1, "Alis", ACTIVE, "phone: +380503332211, mail: info@alis.pro",
                 "food", Map.of("Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER), "Lviv", List.of(HEADQUARTER)));
 
         //
-        // update Alis company
+        // update Alis company1
 
-        // create 2 new company address update company address in Kyiv and delete company Address in Lviv
+        // create 2 new company1 address update company1 address in Kyiv and delete company1 Address in Lviv
         companyAddress01 = new CompanyAddress()
                 .setCountry("Ukraine")
                 .setCity("Odesa")
@@ -109,25 +114,38 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 .setZip("05332")
                 .setAddressCategory(List.of(BRANCH_OFFICE, WAREHOUSE));
 
-        CompanyAddress companyAddress03 = getAddressByCity(company.getCompanyAddress(), "Kyiv");
+        CompanyAddress companyAddress03 = getAddressByCity(company1.getCompanyAddress(), "Kyiv");
         companyAddress03
                 .setStreet("Petra Sagaydachnogo")
                 .setZip("03133")
                 .setAddressCategory(List.of(HEADQUARTER, DISTRIBUTION_CENTER, WAREHOUSE));
 
-        company = CompanyClient.updateCompany(this, company.getId(), "Alis-1", ACTIVE,
+        company1 = CompanyClient.updateCompany(this, company1.getId(), "Alis-1", ACTIVE,
                 "phone: +380503332211, +380508885533, mail: info@alis.pro", "food",
                 List.of(companyAddress01, companyAddress02, companyAddress03));
 
         // check sending Company event
         cleanMap();
-        companyKafkaMessage =
-                KafkaTestConsumer.waitForSendCompanyEvent(company.getId(), KafkaActionType.UPDATE);
+        companyKafkaMessage = KafkaTestConsumer.waitForSendCompanyEvent(company1.getId(), KafkaActionType.UPDATE);
 
-        // check company data
-        checkCompanyData(company, "Alis-1", ACTIVE, "phone: +380503332211, +380508885533, mail: info@alis.pro",
+        // check company1 data
+        checkCompanyData(company1, "Alis-1", ACTIVE, "phone: +380503332211, +380508885533, mail: info@alis.pro",
                 "food", Map.of("Odesa", List.of(WAREHOUSE), "Dnipro", List.of(BRANCH_OFFICE, WAREHOUSE),
                         "Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER, WAREHOUSE)));
+
+        //
+        // delete Alis company1
+
+        // delete company
+        CompanyClient.deleteCompany(this, company1.getId());
+
+        // check sending Company event
+        cleanMap();
+        companyKafkaMessage = KafkaTestConsumer.waitForSendCompanyEvent(company1.getId(), KafkaActionType.DELETE);
+
+        // check company not exist
+        CompanyClient.companyNotExist(this, company1.getId());
+
 
         logger.info("Company component test is finished");
     }

@@ -1,10 +1,13 @@
 package pro.gural.company.company;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import pro.gural.common.domain.AddressCategoryType;
 import pro.gural.common.domain.Company;
 import pro.gural.common.domain.CompanyAddress;
 import pro.gural.common.domain.CompanyStatusType;
+import pro.gural.company.CompanyComponentIT;
 import pro.gural.company.component_test.BaseComponentTest;
 import pro.gural.company.util.Util;
 
@@ -19,6 +22,7 @@ import static org.hamcrest.core.Is.is;
  * @version 2024-11-23
  */
 public class CompanyClient {
+    private static final Logger logger = LoggerFactory.getLogger(CompanyClient.class);
 
     public static Company createCompany(BaseComponentTest restCall, String companyName, CompanyStatusType companyStatus,
                           String contactInformation, String industry, List<CompanyAddress> companyAddresses) throws Exception {
@@ -39,6 +43,13 @@ public class CompanyClient {
         return Util.fromJson(get, Company.class);
     }
 
+    public static void companyNotExist(BaseComponentTest restCall, String companyId) throws Exception {
+        String url = "/v1/companies/" + companyId;
+        String notFound = restCall.get(url, HttpStatus.NOT_FOUND);
+        assertThat(notFound.contains("Company with id: " + companyId + " does not exist"), is(true));
+        logger.info("Receive NOT FOUNT error status: {}", notFound);
+    }
+
     public static Company updateCompany(BaseComponentTest restCall, String companyId, String companyName, CompanyStatusType companyStatus,
                                         String contactInformation, String industry, List<CompanyAddress> companyAddresses) throws Exception {
         String url = "/v1/companies/" + companyId;
@@ -50,6 +61,11 @@ public class CompanyClient {
                 .setCompanyAddress(companyAddresses);
         String put = restCall.put(url, companyRequest);
         return Util.fromJson(put, Company.class);
+    }
+
+    public static void deleteCompany(BaseComponentTest restCall, String companyId) throws Exception {
+        String url = "/v1/companies/" + companyId;
+        restCall.delete(url, HttpStatus.NO_CONTENT);
     }
 
     public static CompanyAddress getAddressByCity(List<CompanyAddress> addresses, String city) {

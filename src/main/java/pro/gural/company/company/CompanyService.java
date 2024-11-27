@@ -10,6 +10,7 @@ import pro.gural.company.domain.KafkaServiceAware;
 import pro.gural.company.domain.exception.CompanyNotFoundRestException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static pro.gural.company.company.Converter.*;
 
@@ -23,14 +24,11 @@ class CompanyService {
 
     private final CompanyRepository repo;
     private final AddressServiceAware addressService;
-    private final KafkaServiceAware kafkaService;
 
     CompanyService(CompanyRepository repo,
-                   AddressServiceAware addressService,
-                   KafkaServiceAware kafkaService) {
+                   AddressServiceAware addressService) {
         this.repo = repo;
         this.addressService = addressService;
-        this.kafkaService = kafkaService;
     }
 
     public String createCompany(CompanyRequest req) {
@@ -54,18 +52,23 @@ class CompanyService {
         return companyId;
     }
 
-    private CompanyEntity getCompanyEntity(String companyId) {
-        CompanyEntity companyEntity = repo.getById(companyId);
-        checkCompanyExist(companyEntity, companyId);
-        return companyEntity;
+    public void deleteCompany(String companyId) {
+        addressService.deleteAllCompanyAddresses(companyId);
+        repo.deleteById(companyId);
     }
 
-    private void checkCompanyExist(CompanyEntity entity, String companyId) {
-        if (entity == null) {
+    private CompanyEntity getCompanyEntity(String companyId) {
+        Optional<CompanyEntity> companyEntityOptional = repo.findById(companyId);
+        return checkCompanyExist(companyEntityOptional, companyId);
+    }
+
+    private CompanyEntity checkCompanyExist(Optional<CompanyEntity> companyEntityOptional, String companyId) {
+        if (companyEntityOptional.isEmpty()) {
             String msg = String.format("Company with id: %s does not exist", companyId);
             logger.error(msg);
             throw new CompanyNotFoundRestException(msg, companyId);
         }
+        return companyEntityOptional.get();
     }
 }
 

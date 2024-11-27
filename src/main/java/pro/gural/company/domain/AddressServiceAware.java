@@ -14,4 +14,6 @@ public interface AddressServiceAware {
     List<CompanyAddress> getCompanyAddresses(String companyId);
 
     void updateCompanyAddresses(List<CompanyAddress> companyAddressListNew, String companyId);
+
+    void deleteAllCompanyAddresses(String companyId);
 }

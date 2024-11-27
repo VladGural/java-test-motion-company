@@ -75,4 +75,18 @@ class CompanyResource {
         logger.info("Company was successfully updated: {}", company);
         return company;
     }
+
+    @Operation(summary = "Delete company by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Request to remove company was successful"),
+    })
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{companyId}")
+    void deleteCompanyById(@PathVariable String companyId) {
+        logger.info("User try to delete company by id: {}", companyId);
+        Company deletedCompany = service.getById(companyId);
+        service.deleteCompany(companyId);
+        kafkaService.sendCompanyEvent(deletedCompany, KafkaActionType.DELETE);
+        logger.info("Company was successfully deleted");
+    }
 }

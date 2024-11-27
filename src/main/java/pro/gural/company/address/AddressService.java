@@ -46,4 +46,9 @@ class AddressService implements AddressServiceAware {
                 toUpdateAddressEntityList(companyAddressListOld, companyAddressListNew, companyId);
         repo.saveAllAndFlush(updatedAddressEntityList);
     }
+
+    @Override
+    public void deleteAllCompanyAddresses(String companyId) {
+        repo.deleteByCompanyId(companyId);
+    }
 }
