@@ -8,8 +8,7 @@ import pro.gural.company.domain.AddressServiceAware;
 
 import java.util.List;
 
-import static pro.gural.company.address.Converter.toAddressEntityList;
-import static pro.gural.company.address.Converter.toCompanyAddressList;
+import static pro.gural.company.address.Converter.*;
 
 /**
  * @author Vladyslav Gural
@@ -27,7 +26,7 @@ class AddressService implements AddressServiceAware {
 
     @Override
     public void addCompanyAddresses(List<CompanyAddress> companyAddressList, String companyId) {
-        List<AddressEntity> addressEntities = toAddressEntityList(companyAddressList, companyId);
+        List<AddressEntity> addressEntities = toCreateAddressEntityList(companyAddressList, companyId);
         repo.saveAllAndFlush(addressEntities);
     }
 
@@ -35,5 +34,16 @@ class AddressService implements AddressServiceAware {
     public List<CompanyAddress> getCompanyAddresses(String companyId) {
         List<AddressEntity> addressEntities = repo.getByCompanyId(companyId);
         return toCompanyAddressList(addressEntities);
+    }
+
+    @Override
+    public void updateCompanyAddresses(List<CompanyAddress> companyAddressListNew, String companyId) {
+        List<AddressEntity> companyAddressListOld = repo.getByCompanyId(companyId);
+        List<AddressEntity> oldAddress = getOldAddress(companyAddressListOld, companyAddressListNew);
+        companyAddressListOld.removeAll(oldAddress);
+        repo.deleteAll(oldAddress);
+        List<AddressEntity> updatedAddressEntityList =
+                toUpdateAddressEntityList(companyAddressListOld, companyAddressListNew, companyId);
+        repo.saveAllAndFlush(updatedAddressEntityList);
     }
 }

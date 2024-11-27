@@ -60,4 +60,19 @@ class CompanyResource {
         logger.info("Company was successfully received: {}", company);
         return company;
     }
+
+    @Operation(summary = "Update company by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated company"),
+            @ApiResponse(responseCode = "404", description = "Company not found")
+    })
+    @PutMapping("/{companyId}")
+    Company updateCustomer(@PathVariable String companyId, @RequestBody @Valid CompanyRequest request) {
+        logger.info("User try to update company by request: {}", request);
+        String customerId = service.updateCompany(companyId, request);
+        Company company = service.getById(customerId);
+        kafkaService.sendCompanyEvent(company, KafkaActionType.UPDATE);
+        logger.info("Company was successfully updated: {}", company);
+        return company;
+    }
 }

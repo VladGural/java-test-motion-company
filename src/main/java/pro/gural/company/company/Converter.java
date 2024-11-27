@@ -20,8 +20,8 @@ class Converter {
                 .setIndustry(req.getIndustry());
     }
 
-    public static CompanyEntity toUpdateCompanyEntity(CompanyRequest req) {
-        return new CompanyEntity()
+    public static CompanyEntity toUpdateCompanyEntity(CompanyRequest req, CompanyEntity companyEntity) {
+        return companyEntity
                 .setName(req.getName())
                 .setStatus(req.getStatus())
                 .setContactInformation(req.getContactInformation())

@@ -11,8 +11,7 @@ import pro.gural.company.domain.exception.CompanyNotFoundRestException;
 
 import java.util.List;
 
-import static pro.gural.company.company.Converter.toCompany;
-import static pro.gural.company.company.Converter.toCreateCompanyEntity;
+import static pro.gural.company.company.Converter.*;
 
 /**
  * @author Vladyslav Gural
@@ -42,10 +41,23 @@ class CompanyService {
     }
 
     public Company getById(String companyId) {
-        CompanyEntity companyEntity = repo.getById(companyId);
-        checkCompanyExist(companyEntity, companyId);
+        CompanyEntity companyEntity = getCompanyEntity(companyId);
         List<CompanyAddress> companyAddresses = addressService.getCompanyAddresses(companyId);
         return toCompany(companyEntity, companyAddresses);
+    }
+
+    public String updateCompany(String companyId, CompanyRequest req) {
+        CompanyEntity companyEntity = getCompanyEntity(companyId);
+        companyEntity = toUpdateCompanyEntity(req, companyEntity);
+        repo.saveAndFlush(companyEntity);
+        addressService.updateCompanyAddresses(req.getCompanyAddress(), companyId);
+        return companyId;
+    }
+
+    private CompanyEntity getCompanyEntity(String companyId) {
+        CompanyEntity companyEntity = repo.getById(companyId);
+        checkCompanyExist(companyEntity, companyId);
+        return companyEntity;
     }
 
     private void checkCompanyExist(CompanyEntity entity, String companyId) {

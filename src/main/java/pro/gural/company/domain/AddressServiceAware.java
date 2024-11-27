@@ -12,4 +12,6 @@ public interface AddressServiceAware {
     void addCompanyAddresses(List<CompanyAddress> companyAddressList, String companyId);
 
     List<CompanyAddress> getCompanyAddresses(String companyId);
+
+    void updateCompanyAddresses(List<CompanyAddress> companyAddressListNew, String companyId);
 }
