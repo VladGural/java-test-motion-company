@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static pro.gural.common.domain.AddressCategoryType.*;
-import static pro.gural.common.domain.CompanyStatusType.ACTIVE;
+import static pro.gural.common.domain.CompanyStatusType.*;
 import static pro.gural.company.company.CompanyClient.checkCompanyData;
 import static pro.gural.company.company.CompanyClient.getAddressByCity;
 import static pro.gural.company.consumer.KafkaTestConsumer.cleanMap;
@@ -60,7 +60,8 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
 
 
         //
-        // create Alis company1
+        // create company1
+        //
 
         // create 2 company1 addresses
         CompanyAddress companyAddress01 = new CompanyAddress()
@@ -97,7 +98,8 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 "food", Map.of("Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER), "Lviv", List.of(HEADQUARTER)));
 
         //
-        // update Alis company1
+        // first update company1
+        // update company name, contactInformation and company addresses
 
         // create 2 new company1 address update company1 address in Kyiv and delete company1 Address in Lviv
         companyAddress01 = new CompanyAddress()
@@ -134,7 +136,25 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                         "Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER, WAREHOUSE)));
 
         //
+        // second update company1
+        // update company name and company status
+        company1 = CompanyClient.updateCompany(this, company1.getId(), "Alis-2", BLOCKED,
+                "phone: +380503332211, +380508885533, mail: info@alis.pro", "food",
+                company1.getCompanyAddress());
+
+        // check sending Company event
+        cleanMap();
+        companyKafkaMessage = KafkaTestConsumer.waitForSendCompanyEvent(company1.getId(), KafkaActionType.UPDATE);
+
+        // check company1 data
+        checkCompanyData(company1, "Alis-2", BLOCKED, "phone: +380503332211, +380508885533, mail: info@alis.pro",
+                "food", Map.of("Odesa", List.of(WAREHOUSE), "Dnipro", List.of(BRANCH_OFFICE, WAREHOUSE),
+                        "Kyiv", List.of(HEADQUARTER, DISTRIBUTION_CENTER, WAREHOUSE)));
+
+
+        //
         // delete Alis company1
+        //
 
         // delete company
         CompanyClient.deleteCompany(this, company1.getId());

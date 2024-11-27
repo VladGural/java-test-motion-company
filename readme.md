@@ -63,59 +63,83 @@ You should have JDK 21, Maven, Docker, and Git installed on your computer to run
 
 Create a new directory and move to it
 ```
-mkdir java_test
-cd java_test
+mkdir java_test && cd java_test
 ```
 
+Clone all artifacts from GitHab repository
+```
+git clone https://github.com/VladGural/java-test-motion-common.git
+```
 
+```
+git clone https://github.com/VladGural/java-test-motion-exception.git
+```
 
-docker network ls
-docker network create motion-test
-docker network ls
+```
+git clone https://github.com/VladGural/java-test-motion-analytic.git
+```
 
-docker run -d --name=kafka --network motion-test -p 9092:9092 apache/kafka
+```
+git clone https://github.com/VladGural/java-test-motion-company.git
+```
 
-docker run \
---name postgres-company \
---network motion-test \
--p 55432:5432 \
--e POSTGRES_USER=admin \
--e POSTGRES_PASSWORD=secret123 \
--e POSTGRES_DB=company_db \
--d postgres:16
+Build and put all necessary libs in local maven repo
+```
+mvn -f ./java-test-motion-common/pom.xml clean install
+```
 
-docker run \
---name postgres-analytic \
---network motion-test \
--p 54432:5432 \
--e POSTGRES_USER=admin \
--e POSTGRES_PASSWORD=secret123 \
--e POSTGRES_DB=analytic_db \
--d postgres:16
+```
+mvn -f ./java-test-motion-exception/pom.xml clean install
+```
 
-cd ./company
-mvn clean install
-docker build -t company-service .
+Build and put all services in the local maven repo. 
+Meanwhile, it will start component tests for Company and Analytic services.
+```
+mvn -f ./java-test-motion-company/pom.xml clean install
+```
 
-docker run \
---name company-service \
---network motion-test \
--p 8080:80 \
--d company-service
+```
+mvn -f ./java-test-motion-analytic/pom.xml clean install
+```
 
-cd ./analytic
-mvn clean install
-docker build -t analytic-service .
+Create docker images for Company and Analytic services
+```
+docker build -t company-service ./java-test-motion-company/.
+```
 
-docker run \
---name analytic-service \
---network motion-test \
--p 8081:80 \
--d analytic-service
+```
+docker build -t analytic-service ./java-test-motion-analytic/.
+```
 
+And now run services in docker containers
+```
+docker compose -f ./java-test-motion-company/compose.yaml up --detach
+```
 
-docker compose up --detach
+For check type, the next
+```
+docker ps
+```
 
+And if everything was done correctly we will see something like this.
+```
+CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS          PORTS                                                               NAMES
+3800d7990512   analytic-service                   "/__cacert_entrypoin…"   49 seconds ago   Up 49 seconds   0.0.0.0:8081->80/tcp, [::]:8081->80/tcp                             analytic-service
+278099ea88f1   company-service                    "/__cacert_entrypoin…"   49 seconds ago   Up 49 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp                             company-service
+7653491a7d7d   confluentinc/cp-kafka:latest       "/etc/confluent/dock…"   49 seconds ago   Up 49 seconds   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp                           kafka
+01599f916f96   confluentinc/cp-zookeeper:latest   "/etc/confluent/dock…"   50 seconds ago   Up 49 seconds   2888/tcp, 3888/tcp, 0.0.0.0:22181->2181/tcp, [::]:22181->2181/tcp   zookeeper
+d88dd6174c9c   postgres:16                        "docker-entrypoint.s…"   50 seconds ago   Up 49 seconds   0.0.0.0:55432->5432/tcp, [::]:55432->5432/tcp                       postgres-company
+fd8429babf20   postgres:16                        "docker-entrypoint.s…"   50 seconds ago   Up 49 seconds   0.0.0.0:54432->5432/tcp, [::]:54432->5432/tcp                       postgres-analytic
+```
+
+Our services ara running!!!
+
+For testing we can use postmen
+```
+CREATE COMPANY
+URL: http://localhost:8080/v1/companies
+METHOD: POST
+REQUEST:
 {
     "name": "Alis",
     "status": "ACTIVE",
@@ -127,7 +151,7 @@ docker compose up --detach
             "city": "Kyiv",
             "street": "Vasilya Tutunnika",
             "zip": "03150",
-            "companyAddress": [
+            "addressCategory": [
                 "HEADQUARTER",
                 "DISTRIBUTION_CENTER"
             ]
@@ -137,9 +161,54 @@ docker compose up --detach
             "city": "Lviv",
             "street": "Velika Gora",
             "zip": "02011",
-            "companyAddress": [
+            "addressCategory": [
                 "HEADQUARTER"
             ]
         }
     ]
 }
+```
+
+```
+GET CURRENT NAME
+URL: http://localhost:8081/v1/companies/{ID_YOUR_COMPANY_CREATED_ABOVE}/current-names
+METHOD: GET
+RESPONSE:
+{
+    "currentName": "Alis"
+}
+```
+
+```
+GET PREVIOUS NAMES
+URL: http://localhost:8081/v1/companies/{ID_YOUR_COMPANY_CREATED_ABOVE}/names
+METHOD: GET
+RESPONSE:
+{
+    "currentName": "Alis",
+    "previousNames": []
+}
+```
+
+```
+GET ADDRESS CATEGORY STAT
+URL: http://localhost:8081/v1/companies/{ID_YOUR_COMPANY_CREATED_ABOVE}/address-category-stats
+METHOD: GET
+RESPONSE:
+{
+    "addressCategoryStat": {
+        "DISTRIBUTION_CENTER": 1,
+        "HEADQUARTER": 2
+    }
+}
+```
+
+```
+GET CURRENT STATUS
+URL: http://localhost:8081/v1/companies/{ID_YOUR_COMPANY_CREATED_ABOVE}/current-statuses
+METHOD: GET
+RESPONSE:
+{
+    "currentStatus": "ACTIVE"
+}
+```
