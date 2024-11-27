@@ -132,7 +132,7 @@ d88dd6174c9c   postgres:16                        "docker-entrypoint.s…"   50 
 fd8429babf20   postgres:16                        "docker-entrypoint.s…"   50 seconds ago   Up 49 seconds   0.0.0.0:54432->5432/tcp, [::]:54432->5432/tcp                       postgres-analytic
 ```
 
-Our services ara running!!!
+Our services are running!!!
 
 For testing we can use postmen
 ```
